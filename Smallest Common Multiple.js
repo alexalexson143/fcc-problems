@@ -37,6 +37,8 @@ function extractPrimeMultiples(notPrimeNumber) {
 
 function smallestCommons(arr) {
   var scm = 0;
+  var newMultiple = [];
+  var tempMultiple = [];
   
   // Sort the array, min to max
   arr.sort(function(a, b) {
@@ -49,16 +51,20 @@ function smallestCommons(arr) {
     arr.splice(i, 0, min);
   }
   
-  // Return all multiples in array and push to new array
+  // Return all prime multiples in array and push to new array
   for(i = 0; i < arr.length; ++i) {
     
     // Test if a prime
     if(isPrime(arr[i])) {
-      continue;
+      newMultiple.push(arr[i]);
     } else {
+      tempMultiple = extractPrimeMultiples(arr[i]);
       
+      // Insert new multiples
+      for(var l = 0; l < tempMultiple.length; ++l) {
+        newMultiple.push(tempMultiple[l]);
+      }
     }
-    
   }
   
   
