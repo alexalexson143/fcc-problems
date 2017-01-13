@@ -11,12 +11,24 @@ function isPrime(maybeAPrime) {
 }
 
 
-function extractPrimeMultiples(notAPrime) {
+function extractPrimeMultiples(notPrimeNumber) {
   var multipleArray = [];
   
-  for(var k = 2; notAPrime % k !== 0; k++) {
-    // Continue here
+  while(!isPrime(notPrimeNumber)) {
+    
+    // Find multiples
+    for(var k = 2; k < notPrimeNumber; ++k) {
+      
+      // If a multiple...
+      if(notPrimeNumber % k === 0) {
+        multipleArray.push(k);
+        notPrimeNumber /= k;
+      }
+    }
   }
+  
+  // Append last prime number
+  multipleArray.push(notPrimeNumber);
   
   return multipleArray;
 }
