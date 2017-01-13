@@ -40,7 +40,6 @@ function smallestCommons(arr) {
   var testScm = 0;
   var newMultiple = [];
   var tempMultiple = [];
-  var valid = true;
   
   // Sort the array, min to max
   arr.sort(function(a, b) {
@@ -70,26 +69,30 @@ function smallestCommons(arr) {
   }
   
   // Remove unnecessary elements in array
-  tempMultiple = newMultiple;
-  for(var m = 1; m < tempMultiple.length; ++m) {
-    testScm = tempMultiple.slice(m).reduce(function(c, d) {
+  tempMultiple = 1;
+  for(var m = 1; m < newMultiple.length; ++m) {
+    tempMultiple = newMultiple.shift; 
+    testScm = newMultiple.reduce(function(c, d) {
       return c * d;
     });
     
-    for(var n = 0; n < arr.length && valid; ++n) {
+    
+    for(var n = 0, valid = true; n < arr.length && valid; ++n) {
       if(testScm % arr[n] !== 0) {
         valid = false;
       }
     }
-    valid = true;
-    // CONTINUE HERE
+    
+    if(!valid) {
+      newMultiple.push(tempMultiple);
+    }
   }
   
   scm = newMultiple.reduce(function(a, b) {
     return a * b;
   });
   
-  return newMultiple;
+  return scm;
 }
 
 smallestCommons([1,5]);
