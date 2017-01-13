@@ -68,10 +68,16 @@ function smallestCommons(arr) {
     }
   }
   
+  newMultiple.sort(function(e, f) {
+    return e - f;
+  });
+  
+//   console.log(arr);
+//   console.log(newMultiple.toString());
   // Remove unnecessary elements in array
   tempMultiple = 1;
-  for(var m = 1; m < newMultiple.length; ++m) {
-    tempMultiple = newMultiple.shift; 
+  for(var m = 1, o = newMultiple.length; m < o; ++m) {
+    tempMultiple = newMultiple.shift();
     testScm = newMultiple.reduce(function(c, d) {
       return c * d;
     });
@@ -92,7 +98,10 @@ function smallestCommons(arr) {
     return a * b;
   });
   
+//   console.log(arr);
+//   console.log(newMultiple.toString());
+//   console.log(scm);
   return scm;
 }
 
-smallestCommons([1,5]);
+smallestCommons([1,13]);
