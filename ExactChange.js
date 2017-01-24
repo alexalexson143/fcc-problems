@@ -1,3 +1,4 @@
+
 function checkCashRegister(price, cash, cid) {
   var change = cash - price;
   var total;
@@ -14,7 +15,19 @@ function checkCashRegister(price, cash, cid) {
     return cid
     .reverse()
     .reduce(function(changeArr, coinBill) {
-      
+      console.log(changeArr, coinBill);
+      while(change !== 0) {
+        if(coinBill[1] === 0) {
+          continue;
+        } else if(coinBill[1] < change) {
+          return changeArr.push(coinBill);
+        } else if(coinBill[1] > change) {
+          var newCoinBill = [coinBill[0], change];
+          return changeArr.push(newCoinBill);
+        } else {
+          return changeArr;
+        }
+      }
     }, []);
   }
   // Here is your change, ma'am.
