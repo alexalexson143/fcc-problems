@@ -1,0 +1,15 @@
+
+function permAlone(str) {
+  console.log('@@@@@@@@@@');
+  var nonRepeat = 0;
+  var strArray = str.split('');
+  
+  nonRepeat = strArray.reduce(function(total, curLetter, index, origArr) {
+    
+    return total;
+  }, 0);
+  
+  //return nonRepeat;
+}
+
+//permAlone('aab');
