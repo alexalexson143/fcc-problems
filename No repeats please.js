@@ -5,21 +5,37 @@ function permAlone(str) {
   var strArray = str.split('');
   var consecutive = /([a-z])\1/;
   
-  function permuteAll(orgArray, excessArray, partArray, iteration) {
+  function permuteAll(partArray, excessArray) {
+    var sliceArray = [];
+    var wholeArray = [];
     var testArray = [];
     var withConsecutive = false;
     
-    if(partArray.length > 2) {
-      permuteAll(orgArray, orgArray.slice(0, iteration), partArray.slice(1), ++iteration);
-    } else {
-      testArray = excessArray.concat(partArray);
-      withConsecutive = consecutive.test(testArray.join(''));
-    }
+    sliceArray = sliceArray.concat(partArray);
+    wholeArray = excessArray.concat(sliceArray);
+    
+    sliceArray.forEach(function(letter) {
+      if(sliceArray.length > 2) {
+        permuteAll(sliceArray.slice(1), wholeArray.concat(sliceArray[0]));
+      } else {
+        testArray = excessArray.concat(sliceArray);
+        withConsecutive = consecutive.test(testArray.join(''));
+        if(!withConsecutive) {
+          ++nonRepeat;
+        }
+        sliceArray.reverse();
+        testArray = excessArray.concat(partArray);
+        withConsecutive = consecutive.test(testArray.join(''));
+        if(!withConsecutive) {
+          ++nonRepeat;
+        }
+        return 0;
+      }
+      partArray.push(partArray.shift());
+    });
   }
   
-  strArray.forEach(function(letter) {
-    permuteAll(strArray, strArray, strArray, 1);
-  });
+  permuteAll(strArray);
   
   //return nonRepeat;
 }
