@@ -31,8 +31,17 @@ function makeFriendlyDates(arr) {
       return date
     })
   
+  console.log(JSON.stringify(dateRange, null, 2))
+  
+  console.log(dateRange[1].date, dateRange[0].date)
+  if(dateRange[1].date == dateRange[0].date) {
+    return [months[dateRange[0].month] + ' ' + dateRange[0].day + ordinalDays[dateRange[0].day] + ', ' + dateRange[0].year]
+  }
+  
+  
   let today = new Date()
   let dayDiff = (dateRange[1].date - dateRange[0].date) / oneDay
+  console.log(dayDiff)
   
   begDay = dateRange[0].day
   begDay = begDay + ordinalDays[begDay]
@@ -49,18 +58,24 @@ function makeFriendlyDates(arr) {
     if(2016 == dateRange[0].year) {
       // begYear = '' - See above
       
+      if(dateRange[1].month == dateRange[0].month) {
+      // endMonth = '' - See above
+      
+      } else {
+        endMonth = dateRange[1].month
+        endMonth = months[endMonth]
+      }
     } else {
       begYear = dateRange[0].year
       beginning += ', ' + begYear
     }
-    if(dateRange[1].month == dateRange[0].month) {
-      // endMonth = '' - See above
-      
-    } else {
-      endMonth = dateRange[1].month
-      endMonth = months[endMonth]
-    }
+    
   } else {
+    begYear = dateRange[0].year
+    beginning += ', ' + begYear
+    
+    endMonth = dateRange[1].month
+    endMonth = months[endMonth]
     endYear = dateRange[1].year
   }
   
@@ -73,16 +88,18 @@ function makeFriendlyDates(arr) {
     ending += ', ' + endYear
   }
   
+  /*
   console.log('bd', begDay)
   console.log('ed', endDay)
   console.log('bm', begMonth)
   console.log('em', endMonth)
   console.log('by', begYear)
   console.log('ey', endYear)
+  */
   
   let finalArray = [beginning, ending] 
-  console.log('answer')
+  console.log(arr, 'answer', finalArray)
   return finalArray;
 }
 
-makeFriendlyDates(['2016-07-01', '2016-07-04'])
+makeFriendlyDates(['2018-01-13', '2018-01-13'])
