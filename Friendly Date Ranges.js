@@ -38,10 +38,11 @@ function makeFriendlyDates(arr) {
   let finDay = ''
   if(dateRange[1].date - dateRange[0].date === 0) {
     if(dateRange[0].day % 10 < 4) {
-      finDay = dateRange[0].day + ordinalDays[dateRange[0].day]
+      finDay = dateRange[0].day.toString() + ordinalDays[dateRange[0].day % 10]
     } else {
-      finDay = dateRange[0].day + ordinalDays.other
+      finDay = dateRange[0].day.toString() + ordinalDays.other
     }
+    console.log(finDay)
     return [months[dateRange[0].month] + ' ' + finDay + ', ' + dateRange[0].year]
   }
   
