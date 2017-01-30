@@ -4,7 +4,7 @@
 // 4 If date ENDS in the same month, do not display month or year
 
 const oneDay = 86400000
-const ordinalDays = {1: 'st', 2: 'nd', 3: 'rd', 4: 'th', 5: 'th', 6: 'th', 7: 'th', 8: 'th', 9: 'th', 0: 'th'}
+const ordinalDays = {1: 'st', 2: 'nd', 3: 'rd', 'other': 'th'}
 const months = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'}
 
 function makeFriendlyDates(arr) {
@@ -27,15 +27,22 @@ function makeFriendlyDates(arr) {
     )
   
     .map(date => {
-      date.date = new Date(date.year, date.month, date.day)
+      date.date = new Date(date.year, date.month - 1, date.day)
       return date
     })
   
   console.log(JSON.stringify(dateRange, null, 2))
-  
   console.log(dateRange[1].date, dateRange[0].date)
-  if(dateRange[1].date == dateRange[0].date) {
-    return [months[dateRange[0].month] + ' ' + dateRange[0].day + ordinalDays[dateRange[0].day] + ', ' + dateRange[0].year]
+  
+  
+  let finDay = ''
+  if(dateRange[1].date - dateRange[0].date === 0) {
+    if(dateRange[0].day % 10 < 4) {
+      finDay = dateRange[0].day + ordinalDays[dateRange[0].day]
+    } else {
+      finDay = dateRange[0].day + ordinalDays.other
+    }
+    return [months[dateRange[0].month] + ' ' + finDay + ', ' + dateRange[0].year]
   }
   
   
