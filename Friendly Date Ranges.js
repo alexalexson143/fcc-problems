@@ -5,8 +5,8 @@
 
 
 // Milliseconds in one day
-const oneDay = 86400000
-const months = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'}
+let oneDayMill = 86400000
+let monthsObj = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'}
 
 function makeFriendlyDates(arr) {
   // Create date object
@@ -15,9 +15,9 @@ function makeFriendlyDates(arr) {
       let parts = date.split('-')
       return {
         'year': parseInt(parts[0]),
-        'month': months[parseInt(parts[1])],
+        'month': monthsObj[parseInt(parts[1])],
         'day': dayMapper(parseInt(parts[2])),
-        'date': Date(parts[0], parts[1] - 1, parts[2])
+        'date': new Date(parts[0], parts[1] - 1, parts[2]).getTime()
         }
       }
     )
@@ -53,7 +53,7 @@ function makeFriendlyDates(arr) {
   
   // Compute distance of dates in DAYS
   function dateDistance(dtFrom, dtTo) {
-    return (Date.parse(dtTo) - Date.parse(dtFrom)) / oneDay
+    return (dtTo - dtFrom) / oneDayMill
   }
   //
   
@@ -78,7 +78,7 @@ function makeFriendlyDates(arr) {
   let endYear = ''
   let beginning = ''
   let ending = ''
-  
+
   // Initialize permanent variables
   begDay = dateRange[0].day
   endDay = dateRange[1].day
@@ -86,7 +86,7 @@ function makeFriendlyDates(arr) {
   beginning = begMonth + ' ' + begDay
   
   // If within one year
-  if(dateDistance(dateRange[0].date, dateRange[1].date) <= 365) {
+  if(dateDistance(dateRange[0].date, dateRange[1].date) < 365) {
     // endYear = '' - Do not include endYear
     
     // If started in the current year
@@ -94,8 +94,8 @@ function makeFriendlyDates(arr) {
       // begYear = '' - Do not inlude current year
       
       // If ending in the same month
-      if(dateRange[1].month == dateRange[0].month) {
-      // endMonth = '' - Do not include end month
+      if(dateRange[1].month == dateRange[0].month && dateRange[1].year == dateRange[0].year) {
+        // endMonth = '' - Do not include end month
         ending = endDay
       
       } else {
@@ -107,7 +107,7 @@ function makeFriendlyDates(arr) {
       begYear = dateRange[0].year
       beginning += ', ' + begYear
       
-      if(dateRange[1].month == dateRange[0].month) {
+      if(dateRange[1].month == dateRange[0].month && dateRange[1].year == dateRange[0].year) {
       // endMonth = '' - Do not include end month
         ending = endDay
       
@@ -127,7 +127,7 @@ function makeFriendlyDates(arr) {
   }
   
   let finalArray = [beginning, ending] 
-  return finalArray;
+  return finalArray
 }
 
-makeFriendlyDates(['2018-01-13', '2018-01-13'])
+makeFriendlyDates(["2022-09-05", "2023-09-05"])
