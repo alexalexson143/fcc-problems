@@ -3,110 +3,130 @@
 // 3 If date begins CURRENT year, and ends within one year, do not display BEGINNING year
 // 4 If date ENDS in the same month, do not display month or year
 
+
+// Milliseconds in one day
 const oneDay = 86400000
-const ordinalDays = {1: 'st', 2: 'nd', 3: 'rd', 'other': 'th'}
 const months = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'}
 
 function makeFriendlyDates(arr) {
   // Create date object
+  let dateRange = arr
+    .map(date => {
+      let parts = date.split('-')
+      return {
+        'year': parseInt(parts[0]),
+        'month': months[parseInt(parts[1])],
+        'day': dayMapper(parseInt(parts[2])),
+        'date': Date(parts[0], parts[1] - 1, parts[2])
+        }
+      }
+    )
+  
+  // Map day to appropriate suffix
+  function dayMapper (day) {
+    if(day > 10 && day < 14) {
+      return day + 'th'
+    }
+    
+    let ordDay = ''
+    let rem = day % 10
+    
+    if(rem == 1) {
+    ordDay = day + 'st'
+    } else if(rem == 2) {
+    ordDay = day + 'nd'
+    } else if(rem == 3) {
+    ordDay = day + 'rd'
+    } else {
+    ordDay = day + 'th'
+    }
+    
+    return ordDay
+  }
+  //
+  
+  // Check if current year
+  function isCurrentYear(frYear) {
+    return 2016 == frYear
+  }
+  //
+  
+  // Compute distance of dates in DAYS
+  function dateDistance(dtFrom, dtTo) {
+    return (Date.parse(dtTo) - Date.parse(dtFrom)) / oneDay
+  }
+  //
+  
+  
+  /************** START **************/
+  // Check if same day
+  if(dateRange[0].date == dateRange[1].date) {
+    if(!isCurrentYear(dateRange[0].year)) {
+      return [dateRange[0].month + ' ' + dateRange[0].day + ', ' + dateRange[0].year]
+    } else {
+      return [dateRange[0].month + ' ' + dateRange[0].day]
+    }
+  }
+  //
+  
+  // Check if within 365 days
   let begDay = ''
   let endDay = ''
   let begMonth = ''
   let endMonth = ''
   let begYear = ''
   let endYear = ''
-  let dateRange = arr
-    .map(date => {
-      let parts = date.split('-')
-      return {
-        'year': parseInt(parts[0]),
-        'month': parseInt(parts[1]),
-        'day': parseInt(parts[2]),
-        }
-      }
-    )
+  let beginning = ''
+  let ending = ''
   
-    .map(date => {
-      date.date = new Date(date.year, date.month - 1, date.day)
-      return date
-    })
-  
-  console.log(JSON.stringify(dateRange, null, 2))
-  console.log(dateRange[1].date, dateRange[0].date)
-  
-  
-  let finDay = ''
-  if(dateRange[1].date - dateRange[0].date === 0) {
-    if(dateRange[0].day % 10 < 4) {
-      finDay = dateRange[0].day.toString() + ordinalDays[dateRange[0].day % 10]
-    } else {
-      finDay = dateRange[0].day.toString() + ordinalDays.other
-    }
-    console.log(finDay)
-    return [months[dateRange[0].month] + ' ' + finDay + ', ' + dateRange[0].year]
-  }
-  
-  
-  let today = new Date()
-  let dayDiff = (dateRange[1].date - dateRange[0].date) / oneDay
-  console.log(dayDiff)
-  
+  // Initialize permanent variables
   begDay = dateRange[0].day
-  begDay = begDay + ordinalDays[begDay]
   endDay = dateRange[1].day
-  endDay = endDay + ordinalDays[endDay]
   begMonth = dateRange[0].month
-  begMonth = months[begMonth]
-  let beginning = begMonth + ' ' + begDay
+  beginning = begMonth + ' ' + begDay
   
-  if(dayDiff <= 365) {
-    // endYear = '' - See above
+  // If within one year
+  if(dateDistance(dateRange[0].date, dateRange[1].date) <= 365) {
+    // endYear = '' - Do not include endYear
     
-    //today.getFullYear()
-    if(2016 == dateRange[0].year) {
-      // begYear = '' - See above
+    // If started in the current year
+    if(isCurrentYear(dateRange[0].year)) {
+      // begYear = '' - Do not inlude current year
       
+      // If ending in the same month
       if(dateRange[1].month == dateRange[0].month) {
-      // endMonth = '' - See above
+      // endMonth = '' - Do not include end month
+        ending = endDay
       
       } else {
         endMonth = dateRange[1].month
-        endMonth = months[endMonth]
+        ending = endMonth + ' ' + endDay
       }
     } else {
+      // Include current year
       begYear = dateRange[0].year
       beginning += ', ' + begYear
-    }
-    
+      
+      if(dateRange[1].month == dateRange[0].month) {
+      // endMonth = '' - Do not include end month
+        ending = endDay
+      
+      } else {
+        endMonth = dateRange[1].month
+        ending = endMonth + ' ' + endDay
+      }
+    }  
   } else {
+    // > 365, Include everything
     begYear = dateRange[0].year
     beginning += ', ' + begYear
     
     endMonth = dateRange[1].month
-    endMonth = months[endMonth]
     endYear = dateRange[1].year
+    ending = endMonth + ' ' + endDay + ', ' + endYear
   }
-  
-  let ending = ''
-  if(endMonth !== '') {
-    ending += endMonth + ' '
-  }
-  ending += endDay
-  if(endYear !== '') {
-    ending += ', ' + endYear
-  }
-  
-  /*
-  console.log('bd', begDay)
-  console.log('ed', endDay)
-  console.log('bm', begMonth)
-  console.log('em', endMonth)
-  console.log('by', begYear)
-  console.log('ey', endYear)
-  */
   
   let finalArray = [beginning, ending] 
-  console.log(arr, 'answer', finalArray)
   return finalArray;
 }
 
